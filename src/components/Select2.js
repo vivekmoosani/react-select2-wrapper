@@ -123,7 +123,7 @@ export default class Select2 extends Component {
   attachEventHandlers(props) {
     // Wrapping onChange so that it is not triggered when
     // value prop is initially set or updated.
-    var onChangePassed = pros.onChange;
+    var onChangePassed = props.onChange;
     if (onChangePassed) {
       props = Object.assign({}, props, {
         onChange: (ev) => {
