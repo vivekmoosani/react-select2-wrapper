@@ -54,11 +54,13 @@ export default class Select2 extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    this.updatingProps = true;
     this.updSelect2(nextProps);
   }
 
   componentDidUpdate() {
     this.updateValue();
+    this.updatingProps = false;
   }
 
   componentWillUnmount() {
@@ -119,6 +121,19 @@ export default class Select2 extends Component {
   }
 
   attachEventHandlers(props) {
+    // Wrapping onChange so that it is not triggered when
+    // value prop is initially set or updated.
+    var onChangePassed = pros.onChange;
+    if (onChangePassed) {
+      props = Object.assign({}, props, {
+        onChange: (ev) => {
+          if (!this.updatingProps) {
+            onChangePassed(ev)
+          }
+        }
+      });
+    }
+    
     props.events.forEach(event => {
       if (typeof props[event[1]] !== 'undefined') {
         this.el.on(event[0], props[event[1]]);
